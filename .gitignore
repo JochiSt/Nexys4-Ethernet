@@ -15,3 +15,7 @@ work/*
 # ignore device mapping files
 *.bba
 *.bin
+
+# ignore bitstream and frames
+*.bit
+*.frames
