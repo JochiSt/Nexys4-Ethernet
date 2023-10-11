@@ -42,7 +42,7 @@ all: $(PROJECTNAME).bit
 
 # Program FPGA
 prog: $(PROJECTNAME).bit
-	iceprog $<
+	openFPGALoader --cable digilent --bitstream $<
 
 ###############################################################################
 # CLEANING
@@ -62,11 +62,9 @@ $(PROJECTNAME).json: $(OBJFILES) unisim-obj93.cf
 		-p 'write_json $@'
 
 # Place and Route
+# nextpnr-xilinx generates both, the routed json + fasm file
 $(PROJECTNAME)_routed.json $(PROJECTNAME).fasm: $(PROJECTNAME).json $(CONSTRAINT) $(DEVICE).bin
-	nextpnr-xilinx --xdc $(CONSTRAINT) --json $< --top $(TOP_MODULE) --fasm $(PROJECTNAME).fasm --chipdb $(DEVICE).bin
-
-# need this special rule, because nextpnr generated two output files
-$(PROJECTNAME).fasm: $(PROJECTNAME)_routed.json
+	nextpnr-xilinx -q --xdc $(CONSTRAINT) --json $< --top $(TOP_MODULE) --fasm $(PROJECTNAME).fasm --chipdb $(DEVICE).bin
 
 $(PROJECTNAME).frames: $(PROJECTNAME).fasm
 	source "${XRAY_DIR}/utils/environment.sh"; ${XRAY_DIR}/utils/fasm2frames.py --part $(DEVICE) --db-root ${XRAY_DIR}/database/artix7 $< > $@
