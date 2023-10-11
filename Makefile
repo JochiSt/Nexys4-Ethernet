@@ -1,6 +1,6 @@
 
 PROJECTNAME=Nexys4Ethernet
-TOP_MODULE=top
+TOP_MODULE=Nexys4Ethernet
 
 DEVICE=xc7a100tcsg324-1
 
@@ -15,6 +15,7 @@ XRAY_DIR=/home/jochen/GitHub/prjxray
 ###############################################################################
 # GHDL options
 WORK_DIR=work
+
 GHDL_OPTIONS+=--std=93
 GHDL_OPTIONS+=--workdir=$(WORK_DIR)
 GHDL_OPTIONS+=-fsynopsys -fexplicit 
@@ -24,8 +25,19 @@ GHDL_OPTIONS+=-P$(UNISIM_DIR)
 
 ###############################################################################
 # source files
-SRCFILES+=src/top.vhdl
-
+#SRCFILES+=src/top.vhdl
+SRCFILES+=src/Nexys4Ethernet.vhdl
+SRCFILES+=src/Ethernet/clock_mod.vhd 
+SRCFILES+=src/Ethernet/clock_mod2.vhd
+SRCFILES+=src/Ethernet/crc32_parallel.vhd
+SRCFILES+=src/Ethernet/debounce_switch.vhd
+SRCFILES+=src/Ethernet/eth_receiver.vhd
+SRCFILES+=src/Ethernet/eth_transmitter.vhd
+#SRCFILES+=src/Ethernet/ethernet_transceiver.vhd
+SRCFILES+=src/Ethernet/led1.vhd src/Ethernet/md_interface.vhd
+#SRCFILES+=src/Ethernet/Nexys4DDR_Master.ucf
+SRCFILES+=src/Ethernet/single_port_RAM.vhd
+SRCFILES+=src/Ethernet/tb_eth_rxtx_arp_udp_ram.vhd
 ###############################################################################
 # get .o from .vdh and .vdhl
 OBJFILES1=$(SRCFILES:.vhd=.o)
@@ -33,6 +45,8 @@ OBJFILES=$(OBJFILES1:.vhdl=.o)
 OBJFILES_WORK=$(addprefix $(WORK_DIR)/,$(notdir $(OBJFILES)))
 
 CONSTRAINT=constraints/Nexys-4-Master.xdc
+
+VPATH=src/Ethernet src
 
 ###############################################################################
 
