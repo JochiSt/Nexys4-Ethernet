@@ -1,0 +1,12 @@
+# ignore everything generated into work
+work/*
+
+# ignore object and cf files
+*.o
+*.cf
+
+# ignore logs
+*.log
+
+# ignore generated JSON
+*.json
