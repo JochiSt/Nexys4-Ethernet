@@ -14,8 +14,9 @@ NEXTPNR_XILINX_PATH=$(dir $(NEXTPNR_XILINX))
 XRAY_DIR=/home/jochen/GitHub/prjxray
 ###############################################################################
 # GHDL options
+WORK_DIR=work
 GHDL_OPTIONS+=--std=93
-GHDL_OPTIONS+=--workdir=work
+GHDL_OPTIONS+=--workdir=$(WORK_DIR)
 GHDL_OPTIONS+=-fsynopsys -fexplicit 
 GHDL_OPTIONS+=--syn-binding
 #GHDL_OPTIONS+=--latches
@@ -27,16 +28,15 @@ SRCFILES+=src/top.vhdl
 
 ###############################################################################
 # get .o from .vdh and .vdhl
-OBJFILES=$(SRCFILES:.vhd=.o)
-OBJFILES+=$(SRCFILES:.vhdl=.o)
+OBJFILES1=$(SRCFILES:.vhd=.o)
+OBJFILES=$(OBJFILES1:.vhdl=.o)
+OBJFILES_WORK=$(addprefix $(WORK_DIR)/,$(notdir $(OBJFILES)))
 
 CONSTRAINT=constraints/Nexys-4-Master.xdc
 
 ###############################################################################
 
 .PHONY: all prog clean total_clean postsim sim
-
-.SECONDARY: $(PROJECTNAME).bit
 
 all: $(PROJECTNAME).bit
 
@@ -55,7 +55,7 @@ total_clean: clean
 
 ###############################################################################
 # Synthesis
-$(PROJECTNAME).json: $(OBJFILES) unisim-obj93.cf
+$(PROJECTNAME).json: $(OBJFILES_WORK) unisim-obj93.cf
 	yosys -Q -T -qq -L $(PROJECTNAME)_synth.log -m ghdl \
 		-p 'ghdl $(GHDL_OPTIONS) $(TOP_MODULE)' \
 		-p 'synth_xilinx -flatten -abc9 -arch xc7  -top $(TOP_MODULE)' \
@@ -117,10 +117,10 @@ postsim: $(PROJECTNAME)_syntb.vcd
 
 ###############################################################################
 # 'compile' VHDL files
-%.o: %.vhdl
+$(WORK_DIR)/%.o: %.vhdl
 	ghdl -a $(GHDL_OPTIONS) $<
 
-%.o: %.vhd
+$(WORK_DIR)/%.o: %.vhd
 	ghdl -a $(GHDL_OPTIONS) $<
 
 ##############################################################################
