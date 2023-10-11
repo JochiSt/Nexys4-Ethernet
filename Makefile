@@ -30,19 +30,18 @@ SRCFILES+=src/top.vhdl
 OBJFILES=$(SRCFILES:.vhd=.o)
 OBJFILES+=$(SRCFILES:.vhdl=.o)
 
-
 CONSTRAINT=constraints/Nexys-4-Master.xdc
 
 ###############################################################################
 
 .PHONY: all prog clean total_clean postsim sim
 
-.SECONDARY: $(PROJECTNAME).bin #$(PROJECT)_tb $(PROJECT)_tb.vcd
+.SECONDARY: $(PROJECTNAME).bit
 
-all: $(PROJECTNAME).rpt $(PROJECTNAME).bin
+all: $(PROJECTNAME).bit
 
 # Program FPGA
-prog: $(PROJECTNAME).bin
+prog: $(PROJECTNAME).bit
 	iceprog $<
 
 ###############################################################################
@@ -51,7 +50,7 @@ clean:
 	rm -f *.o *.cf
 
 total_clean: clean
-	rm -f $(PROJECTNAME).{asc,bin,rpt,json}
+	rm -f $(PROJECTNAME).{bit,frames,fasm,*.json}
 	rm -f *.vcd *.fst
 
 ###############################################################################
@@ -63,8 +62,11 @@ $(PROJECTNAME).json: $(OBJFILES) unisim-obj93.cf
 		-p 'write_json $@'
 
 # Place and Route
-$(PROJECTNAME)_routed.json: $(PROJECTNAME).json $(CONSTRAINT) $(DEVICE).bin
+$(PROJECTNAME)_routed.json $(PROJECTNAME).fasm: $(PROJECTNAME).json $(CONSTRAINT) $(DEVICE).bin
 	nextpnr-xilinx --xdc $(CONSTRAINT) --json $< --top $(TOP_MODULE) --fasm $(PROJECTNAME).fasm --chipdb $(DEVICE).bin
+
+# need this special rule, because nextpnr generated two output files
+$(PROJECTNAME).fasm: $(PROJECTNAME)_routed.json
 
 $(PROJECTNAME).frames: $(PROJECTNAME).fasm
 	source "${XRAY_DIR}/utils/environment.sh"; ${XRAY_DIR}/utils/fasm2frames.py --part $(DEVICE) --db-root ${XRAY_DIR}/database/artix7 $< > $@
