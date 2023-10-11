@@ -8,5 +8,10 @@ work/*
 # ignore logs
 *.log
 
-# ignore generated JSON
+# ignore generated files (synthesis and PNR)
 *.json
+*.fasm
+
+# ignore device mapping files
+*.bba
+*.bin
