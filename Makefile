@@ -16,7 +16,11 @@ XRAY_DIR=/home/jochen/GitHub/prjxray
 # GHDL options
 WORK_DIR=work
 
-GHDL_OPTIONS+=--std=93
+# select the GHDL VHDL standard 93, 93c, 08
+GHDL_STD=93c
+
+#GHDL_OPTIONS+=--std=93c
+GHDL_OPTIONS+=--std=$(GHDL_STD)
 GHDL_OPTIONS+=--workdir=$(WORK_DIR)
 GHDL_OPTIONS+=-fsynopsys -fexplicit 
 GHDL_OPTIONS+=--syn-binding
@@ -37,7 +41,8 @@ SRCFILES+=src/Ethernet/eth_transmitter.vhd
 SRCFILES+=src/Ethernet/led1.vhd src/Ethernet/md_interface.vhd
 #SRCFILES+=src/Ethernet/Nexys4DDR_Master.ucf
 SRCFILES+=src/Ethernet/single_port_RAM.vhd
-SRCFILES+=src/Ethernet/tb_eth_rxtx_arp_udp_ram.vhd
+
+#SRCFILES+=src/Ethernet/tb_eth_rxtx_arp_udp_ram.vhd
 ###############################################################################
 # get .o from .vdh and .vdhl
 OBJFILES1=$(SRCFILES:.vhd=.o)
@@ -62,6 +67,7 @@ prog: $(PROJECTNAME).bit
 # CLEANING
 clean:
 	rm -f *.o *.cf
+	rm -f $(WORK_DIR)/*.o $(WORK_DIR)/*.cf
 
 total_clean: clean
 	rm -f $(PROJECTNAME).{bit,frames,fasm,*.json}
@@ -69,7 +75,7 @@ total_clean: clean
 
 ###############################################################################
 # Synthesis
-$(PROJECTNAME).json: $(OBJFILES_WORK) unisim-obj93.cf
+$(PROJECTNAME).json: unisim-obj$(GHDL_STD).cf $(OBJFILES_WORK) 
 	yosys -Q -T -qq -L $(PROJECTNAME)_synth.log -m ghdl \
 		-p 'ghdl $(GHDL_OPTIONS) $(TOP_MODULE)' \
 		-p 'synth_xilinx -flatten -abc9 -arch xc7  -top $(TOP_MODULE)' \
@@ -139,8 +145,8 @@ $(WORK_DIR)/%.o: %.vhd
 
 ##############################################################################
 # Xilinx UNISIM
-unisim-obj93.cf:
-	ghdl -a --work=unisim /opt/Xilinx/13.2/ISE_DS/ISE/vhdl/src/unisims/unisim_VCOMP.vhd
+unisim-obj$(GHDL_STD).cf:
+	ghdl -a --std=$(GHDL_STD) --work=unisim /opt/Xilinx/13.2/ISE_DS/ISE/vhdl/src/unisims/unisim_VCOMP.vhd
 
 #############################################################################
 # 
