@@ -11,6 +11,7 @@ UNISIM_DIR=/home/jochen/ghdl_simulations/xilinx-ise/
 NEXTPNR_XILINX=$(shell which nextpnr-xilinx)
 NEXTPNR_XILINX_PATH=$(dir $(NEXTPNR_XILINX))
 
+XRAY_DIR=/home/jochen/GitHub/prjxray
 ###############################################################################
 # GHDL options
 GHDL_OPTIONS+=--std=93
@@ -65,20 +66,11 @@ $(PROJECTNAME).json: $(OBJFILES) unisim-obj93.cf
 $(PROJECTNAME)_routed.json: $(PROJECTNAME).json $(CONSTRAINT) $(DEVICE).bin
 	nextpnr-xilinx --xdc $(CONSTRAINT) --json $< --top $(TOP_MODULE) --fasm $(PROJECTNAME).fasm --chipdb $(DEVICE).bin
 
-#yosys -p "synth_xilinx -flatten -abc9 -nobram -arch xc7 -top top; write_json blinky.json" blinky.v
-#../../../nextpnr-xilinx --chipdb ../../xc7a35t.bin --xdc arty.xdc --json blinky.json --write blinky_routed.json --fasm blinky.fasm
+$(PROJECTNAME).frames: $(PROJECTNAME).fasm
+	source "${XRAY_DIR}/utils/environment.sh"; ${XRAY_DIR}/utils/fasm2frames.py --part $(DEVICE) --db-root ${XRAY_DIR}/database/artix7 $< > $@
 
-#source "${XRAY_DIR}/utils/environment.sh"
-
-#${XRAY_UTILS_DIR}/fasm2frames.py --part xc7a35tcsg324-1 --db-root ${XRAY_UTILS_DIR}/../database/artix7 blinky.fasm > blinky.frames
-#${XRAY_TOOLS_DIR}/xc7frames2bit --part_file ${XRAY_UTILS_DIR}/../database/artix7/xc7a35tcsg324-1/part.yaml --part_name xc7a35tcsg324-1  --frm_file blinky.frames --output_file blinky.bit
-
-
-$(PROJECTNAME).bin: $(PROJECTNAME).asc
-	icepack $< $@
-
-$(PROJECTNAME).rpt: $(PROJECTNAME).asc
-	icetime -d up5k -c 12 -mtr $@ $<
+$(PROJECTNAME).bit: $(PROJECTNAME).frames
+	source "${XRAY_DIR}/utils/environment.sh"; ${XRAY_DIR}/build/tools/xc7frames2bit --part_file ${XRAY_DIR}/database/artix7/$(DEVICE)/part.yaml --part_name $(DEVICE)  --frm_file $< --output_file $@
 
 ###############################################################################
 
@@ -98,7 +90,7 @@ simview: $(PROJECTNAME)_tb.vcd
 %_tb.cpp: $(OBJECT_FILES)
 	yosys -m ghdl -p " \
 			ghdl $(GHDL_OPTIONS) $(TOP_MODULE); \
-			hierarchy -check -top PLLtest; \
+			hierarchy -check -top $(TOP_MODULE); \
 			write_cxxrtl -header $@"
 	sed -i '1s/^/#include <iostream>\n/' $@
 
@@ -135,7 +127,6 @@ postsim: $(PROJECTNAME)_syntb.vcd
 # Xilinx UNISIM
 unisim-obj93.cf:
 	ghdl -a --work=unisim /opt/Xilinx/13.2/ISE_DS/ISE/vhdl/src/unisims/unisim_VCOMP.vhd
-
 
 #############################################################################
 # 
