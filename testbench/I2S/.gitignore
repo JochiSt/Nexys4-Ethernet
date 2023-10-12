@@ -1,0 +1,6 @@
+# ignore files from simulation
+work
+*.o
+tb_i2s
+*.vcd
+Makefile
