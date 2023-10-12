@@ -109,24 +109,26 @@ set_property PACKAGE_PIN R2 [get_ports {led[14]}]
 set_property PACKAGE_PIN P2 [get_ports {led[15]}]					
 	set_property IOSTANDARD LVCMOS33 [get_ports {led[15]}]
 
+###############################################################################
+# RGB LEDs
 #Bank = 34, Pin name = IO_L5P_T0_34,						Sch name = LED16_R
-set_property PACKAGE_PIN K5 [get_ports RGB1_Red]					
-	set_property IOSTANDARD LVCMOS33 [get_ports RGB1_Red]
+set_property PACKAGE_PIN K5 [get_ports led16_r]					
+	set_property IOSTANDARD LVCMOS33 [get_ports led16_r]
 #Bank = 15, Pin name = IO_L5P_T0_AD9P_15,					Sch name = LED16_G
-set_property PACKAGE_PIN F13 [get_ports RGB1_Green]				
-	set_property IOSTANDARD LVCMOS33 [get_ports RGB1_Green]
+set_property PACKAGE_PIN F13 [get_ports led16_g]				
+	set_property IOSTANDARD LVCMOS33 [get_ports led16_g]
 #Bank = 35, Pin name = IO_L19N_T3_VREF_35,					Sch name = LED16_B
-set_property PACKAGE_PIN F6 [get_ports RGB1_Blue]					
-	set_property IOSTANDARD LVCMOS33 [get_ports RGB1_Blue]
-#Bank = 34, Pin name = IO_0_34,							Sch name = LED17_R
-set_property PACKAGE_PIN K6 [get_ports RGB2_Red]					
-	set_property IOSTANDARD LVCMOS33 [get_ports RGB2_Red]
+set_property PACKAGE_PIN F6 [get_ports led16_b]					
+	set_property IOSTANDARD LVCMOS33 [get_ports led16_b]
+#Bank = 34, Pin name = IO_0_34,								Sch name = LED17_R
+set_property PACKAGE_PIN K6 [get_ports led17_r]					
+	set_property IOSTANDARD LVCMOS33 [get_ports led17_r]
 #Bank = 35, Pin name = IO_24P_T3_35,						Sch name =  LED17_G
-set_property PACKAGE_PIN H6 [get_ports RGB2_Green]					
-	set_property IOSTANDARD LVCMOS33 [get_ports RGB2_Green]
-#Bank = CONFIG, Pin name = IO_L3N_T0_DQS_EMCCLK_14,		Sch name = LED17_B
-set_property PACKAGE_PIN L16 [get_ports RGB2_Blue]					
-	set_property IOSTANDARD LVCMOS33 [get_ports RGB2_Blue]
+set_property PACKAGE_PIN H6 [get_ports led17_g]					
+	set_property IOSTANDARD LVCMOS33 [get_ports led17_g]
+#Bank = CONFIG, Pin name = IO_L3N_T0_DQS_EMCCLK_14,			Sch name = LED17_B
+set_property PACKAGE_PIN L16 [get_ports led17_b]					
+	set_property IOSTANDARD LVCMOS33 [get_ports led17_b]
 
 ###############################################################################
 #7 segment display
@@ -184,8 +186,8 @@ set_property PACKAGE_PIN M1 [get_ports {an[7]}]
 ###############################################################################
 ##Buttons
 #Bank = 15, Pin name = IO_L3P_T0_DQS_AD1P_15,				Sch name = CPU_RESET
-set_property PACKAGE_PIN C12 [get_ports btnCpuReset]				
-	set_property IOSTANDARD LVCMOS33 [get_ports btnCpuReset]
+set_property PACKAGE_PIN C12 [get_ports btn_reset]				
+	set_property IOSTANDARD LVCMOS33 [get_ports btn_reset]
 #Bank = 15, Pin name = IO_L11N_T1_SRCC_15,					Sch name = BTNC
 set_property PACKAGE_PIN E16 [get_ports btnC]						
 	set_property IOSTANDARD LVCMOS33 [get_ports btnC]
