@@ -48,40 +48,45 @@ library UNISIM;
 use UNISIM.VComponents.all;
 
 entity Nexys4Ethernet is
-	 Generic (M_clk2_5mhz1: integer := 20; -- divisor for 2.5MHz clock
-				 M_clk2_5mhz2: integer := 10; -- divisor for shifted 2.5MHz clock 
-				 N : integer := 22;           -- divisor for debouncing circuit 
-				 ADDR_WIDTH : integer := 10;  -- RAM's address width
-				 DATA_WIDTH : integer := 8);  -- RAM's data width (1024x1byte)
-    Port ( clk100mhz : in  STD_LOGIC;
-           eth_rxd : inout  STD_LOGIC_VECTOR (1 downto 0);
-           eth_txd : inout  STD_LOGIC_VECTOR (1 downto 0);
-           eth_crsdv : inout  STD_LOGIC;
-			  eth_txen : inout  STD_LOGIC;
-           eth_rxerr : inout  STD_LOGIC;
-			  eth_mdc : out  STD_LOGIC;
-           eth_mdio : inout  STD_LOGIC;
-           eth_refclk : out  STD_LOGIC;
-           eth_rstn : inout  STD_LOGIC;
-			  -- display signals for ARP and UDP packets
-			  led16_b : out  STD_LOGIC;
-			  led16_g : out  STD_LOGIC;
-			  led16_r : out  STD_LOGIC;
-			  led17_b : out  STD_LOGIC;
-			  led17_g : out  STD_LOGIC;
-			  led17_r : out  STD_LOGIC;
-			  -- outputs for debugging
---			  mode0 : out std_logic;
---			  mode1 : out std_logic;
---			  mode2 : out std_logic;
---			  refclk : out std_logic;
---			  rxerr : out std_logic;
---			  txd : out  STD_LOGIC_VECTOR (1 downto 0);
---			  txen : out  STD_LOGIC;
-			  -- Reset and SMI inputs/outputs
-			  btn_reset : in std_logic;
-			  led : out std_logic_vector (15 downto 0);
-			  sw : in std_logic_vector (4 downto 0));
+	Generic (
+		M_clk2_5mhz1	: integer := 20; 	-- divisor for 2.5MHz clock
+		M_clk2_5mhz2	: integer := 10; 	-- divisor for shifted 2.5MHz clock 
+		N 				: integer := 22;    -- divisor for debouncing circuit 
+		ADDR_WIDTH 		: integer := 10;	-- RAM's address width
+		DATA_WIDTH 		: integer := 8  	-- RAM's data width (1024x1byte)
+	);
+    Port ( 	
+		CLK100MHz 	: in  		STD_LOGIC;
+		-- Ethernet connection
+		eth_rxd 	: inout  	STD_LOGIC_VECTOR (1 downto 0);
+		eth_txd 	: inout  	STD_LOGIC_VECTOR (1 downto 0);
+		eth_crsdv 	: inout  	STD_LOGIC;
+		eth_txen 	: inout  	STD_LOGIC;
+		eth_rxerr 	: inout  	STD_LOGIC;
+		eth_mdc 	: out  		STD_LOGIC;
+		eth_mdio 	: inout  	STD_LOGIC;
+		eth_refclk 	: out  		STD_LOGIC;
+		eth_rstn 	: inout  	STD_LOGIC;
+		-- display signals for ARP and UDP packets
+		led16_b 	: out  		STD_LOGIC;
+		led16_g 	: out  		STD_LOGIC;
+		led16_r 	: out  		STD_LOGIC;
+		led17_b 	: out  		STD_LOGIC;
+		led17_g 	: out  		STD_LOGIC;
+		led17_r 	: out  		STD_LOGIC;
+		-- outputs for debugging
+--		mode0 		: out 		std_logic;
+--		mode1 		: out 		std_logic;
+--		mode2 		: out		std_logic;
+--		refclk 		: out		std_logic;
+--		rxerr 		: out		std_logic;
+--		txd 		: out 		STD_LOGIC_VECTOR (1 downto 0);
+--		txen 		: out  		STD_LOGIC;
+		-- Reset and SMI inputs/outputs
+		btn_reset 	: in		std_logic;
+		led 		: out 		std_logic_vector (15 downto 0);
+		sw 			: in 		std_logic_vector (15 downto 0)
+	);
 end Nexys4Ethernet;
 
 architecture Behavioral of Nexys4Ethernet is
@@ -271,7 +276,7 @@ begin
 									  mdio => eth_mdio,
 									  eth_rstn => eth_rstn,
 									  led => led,
-									  sw => sw);
+									  sw => sw(4 downto 0));
 									  
 --Ethernet receiver
 	Ethernet_receiver: eth_receiver
