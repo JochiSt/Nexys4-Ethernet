@@ -31,23 +31,25 @@ use IEEE.STD_LOGIC_1164.ALL;
 --use UNISIM.VComponents.all;
 
 entity led1 is
-    Port ( clk50mhz : in  STD_LOGIC;
-			  rstn : in STD_LOGIC;
-           dv_arp : in  STD_LOGIC;
-			  dv_eth : in  STD_LOGIC;
-           led16_b : out  STD_LOGIC;
-			  led16_g : out  STD_LOGIC;
-			  led16_r : out  STD_LOGIC;
-			  led17_b : out  STD_LOGIC;
-			  led17_g : out  STD_LOGIC;
-			  led17_r : out  STD_LOGIC);
+    Port ( 
+		clk50mhz : in  STD_LOGIC;
+		rstn 	: in   STD_LOGIC;
+		dv_arp 	: in   STD_LOGIC;
+		dv_eth 	: in   STD_LOGIC;
+		led16_b : out  STD_LOGIC;
+		led16_g : out  STD_LOGIC;
+		led16_r : out  STD_LOGIC;
+		led17_b : out  STD_LOGIC;
+		led17_g : out  STD_LOGIC;
+		led17_r : out  STD_LOGIC
+	);
 end led1;
 
 architecture Behavioral of led1 is
-type state_type is (idle,arp_signal,eth_signal);
-signal state : state_type := idle;
-signal count_arp : integer range 0 to 3 := 0;
-signal count_eth : integer range 0 to 3 := 0;
+	type state_type is (idle,arp_signal,eth_signal);
+	signal state : state_type := idle;
+	signal count_arp : integer range 0 to 3 := 0;
+	signal count_eth : integer range 0 to 3 := 0;
 
 begin
 	led: process (clk50mhz,rstn,dv_arp,dv_eth)
@@ -59,7 +61,7 @@ begin
 			count_eth <= 0;
 		elsif (rising_edge(clk50mhz)) then
 			if (dv_arp ='1') then 			-- if valid ARP packet received
-				count_arp <= count_arp+1;  -- increment ARP counter 
+				count_arp <= count_arp+1;  	-- increment ARP counter 
 				if(count_arp+1 > 3) then
 					count_arp <= 1;
 				end if;

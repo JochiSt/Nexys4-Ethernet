@@ -670,8 +670,13 @@ begin
 	-- this process start after Ethernet header is read and it decides whether to accept or
 	-- reject packet (when it's not addressed to FPGA, for example) and determines
 	-- the type of the upper layer protocol
-	eth_packet_type: process (read_eth_header_done,dest_mac,eth_prot_type,
-	fpga_mac,clk50mhz)
+	eth_packet_type: process (
+			read_eth_header_done,
+			dest_mac,
+			eth_prot_type,
+			fpga_mac,
+			clk50mhz
+		)
 		begin
 		if(rising_edge(clk50mhz)) then
 				if (read_eth_header_done = '1') then -- decision is made immediately after Ethernet header
