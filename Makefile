@@ -16,14 +16,23 @@ XRAY_DIR=/home/jochen/GitHub/prjxray
 # GHDL options
 WORK_DIR=work
 
-# select the GHDL VHDL standard 93, 93c, 08
-GHDL_STD=93c
+# select the GHDL VHDL standard 93, 93c, 02, 08
+GHDL_STD=08
 
-#GHDL_OPTIONS+=--std=93c
+ifeq ($(GHDL_STD), 93)
+UNISIM_LIB=unisim-obj93.cf
+else ifeq ($(GHDL_STD), 93c)
+UNISIM_LIB=unisim-obj93.cf
+else ifeq ($(GHDL_STD), 02)
+UNISIM_LIB=unisim-obj93.cf
+else ifeq ($(GHDL_STD), 08)
+UNISIM_LIB=unisim-obj08.cf
+endif 
+
 GHDL_OPTIONS+=--std=$(GHDL_STD)
 GHDL_OPTIONS+=--workdir=$(WORK_DIR)
 GHDL_OPTIONS+=-fsynopsys -fexplicit 
-GHDL_OPTIONS+=--syn-binding
+#GHDL_OPTIONS+=--syn-binding
 #GHDL_OPTIONS+=--latches
 GHDL_OPTIONS+=-P$(UNISIM_DIR)
 
@@ -37,9 +46,8 @@ SRCFILES+=src/Ethernet/crc32_parallel.vhd
 SRCFILES+=src/Ethernet/debounce_switch.vhd
 SRCFILES+=src/Ethernet/eth_receiver.vhd
 SRCFILES+=src/Ethernet/eth_transmitter.vhd
-#SRCFILES+=src/Ethernet/ethernet_transceiver.vhd
 SRCFILES+=src/Ethernet/led1.vhd src/Ethernet/md_interface.vhd
-#SRCFILES+=src/Ethernet/Nexys4DDR_Master.ucf
+#SRCFILES+=src/Ethernet/ethernet_transceiver.vhd
 SRCFILES+=src/Ethernet/single_port_RAM.vhd
 
 #SRCFILES+=src/Ethernet/tb_eth_rxtx_arp_udp_ram.vhd
@@ -145,7 +153,7 @@ $(WORK_DIR)/%.o: %.vhd
 
 ##############################################################################
 # Xilinx UNISIM
-unisim-obj$(GHDL_STD).cf:
+$(UNISIM_LIB):
 	ghdl -a --std=$(GHDL_STD) --work=unisim /opt/Xilinx/13.2/ISE_DS/ISE/vhdl/src/unisims/unisim_VCOMP.vhd
 
 #############################################################################
