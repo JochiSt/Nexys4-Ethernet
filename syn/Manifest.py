@@ -28,7 +28,7 @@ syn_properties = [
     ["steps.write_bitstream.args.verbose", "1"]]
 
 files = [
-    "Nexys-4-Master.xdc",
+    "../Nexys-4-Master.xdc",
 ]
 
 modules = {
