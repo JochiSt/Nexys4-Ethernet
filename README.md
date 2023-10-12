@@ -7,3 +7,5 @@ Toolchain used:
 1. YOSYS
 1. nextpnr-xilinx
 1. openFPGAloader
+
+Since the above toolchain did not work at first glance, I tried a different approach using Vivado and HDLmake.
