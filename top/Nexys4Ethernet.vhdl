@@ -122,7 +122,7 @@ architecture Behavioral of Nexys4Ethernet is
 	signal pc_ip 			: std_logic_vector (31 downto 0);  					-- PC's IP4 address (configured on PC's side)
 	signal pc_port 			: std_logic_vector (15 downto 0);					-- PC's port (configured on PC's side)
 	constant fpga_mac 		: std_logic_vector (47 downto 0) := x"00183e01ff71";-- FPGA's MAC address
-	constant fpga_ip 		: std_logic_vector (31 downto 0) := x"C0A8010A";    -- FPGA's IP4 address 192.168.1.10
+	constant fpga_ip 		: std_logic_vector (31 downto 0) := x"C0A80109";    -- FPGA's IP4 address 192.168.1.9
 	constant fpga_port 		: std_logic_vector (15 downto 0) := x"E362";       	-- FPGA's port 58210
 	-- data transfer between Rx and Tx
 	signal send_arp_reply 	: std_logic := '0';        	-- ARP protocol flag
